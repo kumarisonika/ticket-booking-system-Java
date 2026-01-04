@@ -1,17 +1,24 @@
 package org.example;
+import org.example.Seat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Event {
-    int eventId;
-    String name;
-    String dateTime;
-    String venue;
-    int seats;
+    private final int eventId;
+    private final Map<Integer, Seat> seats = new HashMap<>();
 
-    Event(int eventId, String name, String dateTime, String venue, int seats){
+    public Event(int eventId, int totalSeats){
         this.eventId= eventId;
-        this.name=name;
-        this.dateTime=dateTime;
-        this.venue=venue;
-        this.seats=seats;
+        for(int i=1; i<= totalSeats; i++){
+            seats.put(i, new Seat(i));
+        }
+    }
+
+    public int getEventId(){
+        return eventId;
+    }
+
+    public Seat getSeat(int seatNumber){
+        return seats.get(seatNumber);
     }
 }
