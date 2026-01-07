@@ -16,11 +16,12 @@ public class ConcertTicketBookingSystem {
         double total=0;
 
         for (Seat seat: seats){
-            seat.book();
+            seat.reserve();
             total+= seat.price;
         }
 
         Booking booking = new Booking(UUID.randomUUID().toString(), user,concert,seats,total);
+
         booking.confirm();
         bookings.add(booking);
         return booking;

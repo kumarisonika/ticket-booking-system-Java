@@ -24,7 +24,13 @@ public class Main {
 
         Booking booking = system.bookSeats(user1, concert1, seats1);
 
-        System.out.println(booking.bookingId+ " "+ booking.bookingStatus + " "+ booking.user+" "+ booking.totalPrice+" " + booking.concert.artist);
+        System.out.println(
+                booking.bookingId + " " +
+                        booking.bookingStatus + " " +
+                        booking.user.name + " " +
+                        booking.totalPrice + " " +
+                        booking.concert.artist
+        );
 
 
 

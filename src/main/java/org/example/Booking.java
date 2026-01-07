@@ -19,6 +19,9 @@ public class Booking {
     }
 
     public void confirm(){
+        for (Seat seat: seats){
+            seat.book();
+        }
         bookingStatus = BookingStatus.CONFIRMED;
         System.out.println("Booking confirmed for "+ this.user.name);
     }
