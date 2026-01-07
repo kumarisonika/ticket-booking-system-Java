@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ConcertTicketBookingSystem {
     private List<Concert> concerts = new ArrayList<>();
@@ -19,16 +20,9 @@ public class ConcertTicketBookingSystem {
             total+= seat.price;
         }
 
-        Booking booking = new Booking();
-        booking.user= user;
-        booking.concert= concert;
-        booking.totalPrice = total;
-        booking.bookingStatus= BookingStatus.PENDING;
-
+        Booking booking = new Booking(UUID.randomUUID().toString(), user,concert,seats,total);
         booking.confirm();
         bookings.add(booking);
         return booking;
-
-
     }
 }
