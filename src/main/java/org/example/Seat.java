@@ -1,12 +1,17 @@
 package org.example;
 
-public class Seat {
+import java.time.Duration;
+import java.time.LocalDateTime;
 
+public class Seat {
     String seatId;
     String seatNumber;
     SeatType seatType;
     SeatStatus seatStatus;
     double price;
+
+    LocalDateTime reservedAt;
+    private static final int RESERVATION_TIMEOUT_MINUTES=5;
 
     Seat(String seatId, String seatNumber, SeatType seatType, double price) {
         this.seatId = seatId;
@@ -16,7 +21,10 @@ public class Seat {
         this.price = price;
     }
 
-    public boolean isAvailable() {
+    public synchronized boolean isAvailable() {
+        if (seatStatus == SeatStatus.RESERVED && isReservationExpired()) {
+            releaseInternal();
+        }
         return seatStatus == SeatStatus.AVAILABLE;
     }
 
@@ -26,18 +34,32 @@ public class Seat {
                     "Seat " + seatNumber + " is not available hence can't be reserved."
             );
         }
-//        System.out.println("Seat was reserved");
         seatStatus = SeatStatus.RESERVED;
     }
 
-    public void book() {
+    public synchronized void book() {
         if (seatStatus != SeatStatus.RESERVED) {
             throw new IllegalStateException("Seat must be reserved before booking");
+        }
+        if (isReservationExpired()) {
+            releaseInternal();
+            throw new IllegalStateException("Reservation expired for seat " + seatNumber);
         }
         seatStatus = SeatStatus.BOOKED;
     }
 
-    public void release() {
+    public synchronized void release() {
+        releaseInternal();
+    }
+
+    private void releaseInternal() {
         seatStatus = SeatStatus.AVAILABLE;
+        reservedAt = null;
+    }
+
+    private boolean isReservationExpired() {
+        if (reservedAt == null) return false;
+        return Duration.between(reservedAt, LocalDateTime.now())
+                .toMinutes() >= RESERVATION_TIMEOUT_MINUTES;
     }
 }
